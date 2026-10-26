@@ -12,7 +12,7 @@ local M = addon.M -- shared methods
 --------------------
 
 function M.GIL_GetPlaystyleString (playstyle, activityInfo)
-
+	if InCombatLockdown() then return nil end
 	if activityInfo and playstyle ~= (0 or nil) and C_LFGList.GetLfgCategoryInfo(activityInfo.categoryID).showPlaystyleDropdown then
 		local typeStr
 		
@@ -33,6 +33,7 @@ function M.GIL_GetPlaystyleString (playstyle, activityInfo)
 end
 
 function M.GIL_LFG_Refresh()
+	if InCombatLockdown() then return end
 	if V.wowIsERA == true or V.wowIsTBC == true then return end
 
 	if LFGListFrame.SearchPanel ~= nil and LFGListFrame.SearchPanel:IsShown() then
@@ -41,6 +42,7 @@ function M.GIL_LFG_Refresh()
 end
 
 function M.GIL_LFG_Update (self)
+	if InCombatLockdown() then return end
 	if not C_LFGList.HasSearchResultInfo(self.resultID) then return end
 	
 	local info = C_LFGList.GetSearchResultInfo(self.resultID);
@@ -51,6 +53,7 @@ function M.GIL_LFG_Update (self)
 end
 
 function M.GIL_LFG_Tooltip (self)
+	if InCombatLockdown() then return end
 	if not C_LFGList.HasSearchResultInfo(self.resultID) then return end
 
 	local info = C_LFGList.GetSearchResultInfo(self.resultID);
@@ -76,6 +79,7 @@ function M.GIL_LFG_Tooltip (self)
 end
 
 function M.GIL_LFG_ApplicantMenu(owner, root, contextData)
+	if InCombatLockdown() then return end
 	if not owner or not owner.resultID then return end
 	
 	local info = C_LFGList.GetSearchResultInfo(owner.resultID);
@@ -107,6 +111,7 @@ end
 ----------------------
 
 function M.GIL_UnitMenuPlayer (owner, root, contextData)
+	if InCombatLockdown() then return end
 	local target, server = UnitName(contextData.unit)
 
 	if server == nil or server == "" then
@@ -153,6 +158,7 @@ end
 --------------
 
 function M.GIL_HookFunctions()
+	if InCombatLockdown() then return end
 	-- /script Menu.PrintOpenMenuTags()
 	
 	if GlobalIgnoreDB.useLFGHacks == true and (V.wowIsMOP or V.wowIsRetail) then

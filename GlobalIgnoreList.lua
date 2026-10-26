@@ -57,16 +57,19 @@ local BlizzardInviteUnit		= nil
 ----------------------------------
 
 function M.debugMsg (msg)
+	if InCombatLockdown() then return end
 --	if GlobalIgnoreDB.showIgnoreDebug == true then
 		--print("|cffffff00Global Ignore: " .. msg)
 --	end
 end
 
 function M.ShowMsg (msg)
+	if InCombatLockdown() then return end
 	print ("|cff33ff99Global Ignore: |cffffffff" .. (msg or "Critical error"))
 end
 
 local function OnOff (value)
+	if InCombatLockdown() then return end
 	if value == nil or value == false then
 		return "|cffffff00" .. L["OFF"] .. "|cffffffff"
 	elseif value == true then
@@ -77,6 +80,7 @@ local function OnOff (value)
 end
 
 function M.dayString (value)
+	if InCombatLockdown() then return end
 	if value == 1 then
 		return L["DAY"]
 	else
@@ -85,6 +89,7 @@ function M.dayString (value)
 end
 
 local function hasDeleted (name)
+	if InCombatLockdown() then return 0 end
 
 	if not name then return 0 end
 	
@@ -103,6 +108,7 @@ local function hasDeleted (name)
 end
 
 local function addDeleted (name)
+	if InCombatLockdown() then return end
 
 	local idx = hasDeleted(name)
 	
@@ -132,6 +138,7 @@ local function removeDeleted (name)
 end
 
 local function AddToList(newname, newfaction, newnote, newtype)
+	if InCombatLockdown() then return end
 
 	local index = #GlobalIgnoreDB.ignoreList+1
 	
@@ -149,6 +156,7 @@ local function AddToList(newname, newfaction, newnote, newtype)
 end
 
 local function RemoveFromList (index)
+	if InCombatLockdown() then return end
 	local name = GlobalIgnoreDB.ignoreList[index]
 	if name then
 		addDeleted(name)
@@ -164,6 +172,7 @@ local function RemoveFromList (index)
 end	
 
 local function AddToBlockHistory (filterNum, message, chNumber, chName, from)
+	if InCombatLockdown() then return end
 	GlobalIgnoreDB.filterBlocked[filterNum] = GlobalIgnoreDB.filterBlocked[filterNum] or {}
 	
 	GlobalIgnoreDB.filterBlockedLast[filterNum] = GlobalIgnoreDB.filterBlockedLast[filterNum] or 0
@@ -188,6 +197,7 @@ local function AddToBlockHistory (filterNum, message, chNumber, chName, from)
 end 
 	
 function M.RemoveChatFilter (index)
+	if InCombatLockdown() then return end
 	if GlobalIgnoreDB.filterList[index] then
 		table.remove(GlobalIgnoreDB.filterList, index)
 		table.remove(GlobalIgnoreDB.filterDesc, index)
@@ -200,6 +210,7 @@ function M.RemoveChatFilter (index)
 end
 
 local function getSyncValue (index)
+	if InCombatLockdown() then return end
 	-- value, index of syncInfo data
 		
 	local s = ""
@@ -225,6 +236,7 @@ local function getSyncValue (index)
 end
 
 local function setSyncValue (name, index)
+	if InCombatLockdown() then return end
 
 	local val,idx = getSyncValue(index)
 	
@@ -240,11 +252,13 @@ local function setSyncValue (name, index)
 end		
 
 local function isServerMatch (server1, server2)
+	if InCombatLockdown() then return end
 
 	return M.Proper(server1) == M.Proper(server2)
 end
 
 local function hasFilterID (id)
+	if InCombatLockdown() then return end
 
 	for count = 1, #GlobalIgnoreDB.filterDesc do
 		if GlobalIgnoreDB.filterID[count] == id then
@@ -256,6 +270,7 @@ local function hasFilterID (id)
 end
 
 local function isDefFilterID (id)
+	if InCombatLockdown() then return end
 
 	if (id == nil or id == "") then return -1 end
 
@@ -269,14 +284,16 @@ local function isDefFilterID (id)
 end
 
 local function hasIgnored (name)
+	if InCombatLockdown() then return end
 
 	local result = 0
 	
 	name = M.Proper(M.addServer(name))
 		
 	for count = 1, C_FriendList.GetNumIgnores() do
-	
-		if name == M.Proper(M.addServer(C_FriendList.GetIgnoreName(count))) then
+		local tempName = C_FriendList.GetIgnoreName(count)
+		if issecretvalue(tempName) then return count end -- default to ignored. make them decide
+		if name == M.Proper(M.addServer(tempName)) then
 			result = count
 			
 			break
@@ -287,6 +304,7 @@ local function hasIgnored (name)
 end
 
 function M.hasNPCIgnored (name)
+	if InCombatLockdown() then return 0 end
 
 	if not name then return 0 end
 	
@@ -300,6 +318,7 @@ function M.hasNPCIgnored (name)
 end
 
 local function hasServerIgnored (name)
+	if InCombatLockdown() then return 0 end
 
 	if not name then return 0 end
 	
@@ -313,6 +332,7 @@ local function hasServerIgnored (name)
 end
 
 function M.hasGroupWarning (name)
+	if InCombatLockdown() then return 0 end
 
 	if not name then return 0 end
 	
@@ -326,6 +346,7 @@ function M.hasGroupWarning (name)
 end
 
 function M.hasGlobalIgnored (name)
+	if InCombatLockdown() then return 0 end
 
 	if not name then return 0 end
 
@@ -339,6 +360,7 @@ function M.hasGlobalIgnored (name)
 end
 
 function M.hasAnyIgnored (name)
+	if InCombatLockdown() then return 0 end
 
 	if not name then return 0 end
 
@@ -353,6 +375,7 @@ function M.hasAnyIgnored (name)
 end
 
 local function ShowIgnoreList (param)
+	if InCombatLockdown() then return end
 	local days   = tonumber(param)
 	local sName  = ""
 	
@@ -423,6 +446,7 @@ local function ShowIgnoreList (param)
 end
 
 function M.ResetSpamFilters()
+	if InCombatLockdown() then return end
 	GlobalIgnoreDB.filterList			= {}
 	GlobalIgnoreDB.filterDesc			= {}
 	GlobalIgnoreDB.filterCount			= {}
@@ -447,12 +471,14 @@ function M.ResetSpamFilters()
 end
 
 local function ResetBlizzardIgnore()
+	if InCombatLockdown() then return end
 	for count = 1, C_FriendList.GetNumIgnores() do
 		BlizzardDelIgnoreByIndex(count)
 	end
 end
 
 local function ResetIgnoreDB()
+	if InCombatLockdown() then return end
 
 	GlobalIgnoreDB = {
 		chatmsg				= true,
@@ -503,6 +529,7 @@ local function ResetIgnoreDB()
 end
 
 local function isValidList()
+	if InCombatLockdown() then return end
 
 	if C_FriendList.GetNumIgnores() > 0 then
 		local str	
@@ -531,6 +558,7 @@ local function isValidList()
 end
 
 function M.SyncIgnoreList (silent)
+	if InCombatLockdown() then return end
 
 	if silent == nil then
 		silent = false
@@ -562,6 +590,7 @@ function M.SyncIgnoreList (silent)
 		for count = 1, ignores do
 			
 			name = C_FriendList.GetIgnoreName(count)
+			if issecretvalue(name) then return end -- we're in combat. cant act on this now
 			
 			if name ~= nil then
 			
@@ -613,6 +642,7 @@ function M.SyncIgnoreList (silent)
 	
 		local skipRemove = false
 		local name       = C_FriendList.GetIgnoreName(count)
+		if issecretvalue(name) then return end -- we're in combat. cant act on this now
 
 		if (name == "") then
 			M.debugMsg("Removing blank name on Blizzard ignore list")
@@ -728,6 +758,7 @@ function M.SyncIgnoreList (silent)
 end
 
 function M.PruneIgnoreList (days, doit)
+	if InCombatLockdown() then return end
 
 	if days == nil or days <= 0 then		
 		return 0
@@ -1091,6 +1122,7 @@ end
 -------------------
 
 local function EventHandler (self, event, sender, ...)
+	if InCombatLockdown() then return end
 
 	--print ("DEBUG event=".. (event or "nil") .. " sender=" .. (sender or "nil"))
 	
@@ -1237,6 +1269,7 @@ end
 ------------------------
 
 function M.filterComplex (filterStr, chatStr, chNumber, chName)
+	if InCombatLockdown() then return end
 	-- true=should be filtered
 	-- chatStr should be convered to all lower
 	
@@ -1876,6 +1909,7 @@ end
 --local lastMsg = ""
 
 local function chatMessageFilter (self, event, message, from, t1, t2, t3, t4, t5, chNumber, chName, t8, msgID, t10, t11, t12, ...)
+	if InCombatLockdown() then return end
 	
 --	print("DEBUG"..
 --		"\n\tFrom: "..(from or "nil")..
@@ -2136,9 +2170,11 @@ end
 -------------------
 
 local function GILTest()
+	if InCombatLockdown() then return end
 end
 
 function M.ignoreFromCmd (argStr)
+	if InCombatLockdown() then return end
 	argStr = (M.trim(M.Proper(argStr)) or "")
 	local server
 	if argStr == "" then
@@ -2159,6 +2195,7 @@ function M.ignoreFromCmd (argStr)
 end
 
 function SlashCmdList.GIGNORE (msg)
+	if InCombatLockdown() then return end
 
 	msg = M.strDown(msg)
 	
@@ -2396,6 +2433,8 @@ StaticPopupDialogs["GIL_PARTYWARN"] = {
 }
 
 C_PartyInfo.InviteUnit = function (name)
+	if InCombatLockdown() then return end  -- we're in combat. cant act on this now
+	if issecretvalue(name) then return end -- we're in combat. cant act on this now
 
 	name = M.Proper(name)
 	

@@ -13,6 +13,7 @@ local M = addon.M
 ----------------------
 
 function M.GILDUMP (o)
+	if InCombatLockdown() then return tostring(o) end
 	if type(o) == 'table' then
 		local s = '{ '
 		
@@ -30,6 +31,7 @@ function M.GILDUMP (o)
 end
 
 function M.GILDUMP2 (tbl, indent)
+	if InCombatLockdown() then return end
 	if not indent then
 		indent = 0
 	end
@@ -52,6 +54,7 @@ function M.GILDUMP2 (tbl, indent)
 end
 
 function M.popWord (str, ch)
+	if InCombatLockdown() then return "", str end
 
 	local idx = string.find(str, ch, 1, true)
 	
@@ -63,6 +66,7 @@ function M.popWord (str, ch)
 end
 
 function M.trim (str)
+	if InCombatLockdown() then return n and "" end
 
 	local n = str:find"%S"
 	return n and str:match(".*%S", n) or ""
@@ -70,6 +74,7 @@ function M.trim (str)
 end
 
 function M.dateToJulianDate (dateStr)
+	if InCombatLockdown() then return 0 end
 	
 	if dateStr == nil then
 		return 0
@@ -111,6 +116,7 @@ function M.dateToJulianDate (dateStr)
 end
 
 function M.daysFromToday (dateStr)
+	if InCombatLockdown() then return -1 end
 
 	local addDate = M.dateToJulianDate(dateStr)
 	local today   = M.dateToJulianDate(date("%d %b %Y"))
@@ -128,6 +134,7 @@ function M.daysFromToday (dateStr)
 end
 
 function M.strDown (str)
+	if InCombatLockdown() then return "" end
 
 	local len    = strlen(str)
 	local count  = 1
@@ -152,6 +159,7 @@ function M.strDown (str)
 end
 
 function M.Proper (name, okSpaces)
+	if InCombatLockdown() then return "" end
 
 	if name == nil then return nil end
 	if name == "" then return nil end
@@ -193,6 +201,7 @@ function M.Proper (name, okSpaces)
 end
 
 function M.GetWord (str, wordnumber)
+	if InCombatLockdown() then return "" end
 
 	local len     = strlen(str)
 	local count   = 1
@@ -225,6 +234,7 @@ function M.GetWord (str, wordnumber)
 end
 
 function M.prettyServer (origName)
+	if InCombatLockdown() then return nil end
 
 	if origName == nil then return nil end
 
@@ -409,6 +419,7 @@ function M.prettyServer (origName)
 end
 
 function M.getServer (name, def)
+	if InCombatLockdown() then return end
 
 	local index = string.find(name, "-", 1, true)
 	
@@ -420,6 +431,7 @@ function M.getServer (name, def)
 end
 
 function M.removeServer (name, strict)
+	if InCombatLockdown() then return nil end
 	
 	if name == nil then
 		return nil
@@ -445,6 +457,7 @@ function M.removeServer (name, strict)
 end
 
 function M.addServer (name)
+	if InCombatLockdown() then return nil end
 
 	if not name then return nil end
 
